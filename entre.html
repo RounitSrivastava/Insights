@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Your Idea</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
+        }
+
+        * {
+            box-sizing: inherit; /* Apply box-sizing to all elements */
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 3px;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .dropdown-menu a {
+            display: block;
+            padding: 12px; /* Reduced padding */
+            text-decoration: none;
+            color: black;
+            font-size: 12px; /* Reduced font size */
+        }
+        .dropdown-menu a:hover {
+            background: #f0f0f0;
+        }
+        .login-btn {
+            background-color: #6200ea;
+            color: white;
+            padding: 6px 10px; /* Reduced padding */
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            margin-left: 10px; /* Adjusted margin to create space */
+            font-size: 12px; /* Reduced font size */
+            white-space: nowrap; /* Prevent text wrapping */
+            flex-shrink: 0; /* Prevent the button from shrinking */
+        }
+        .login-btn:hover {
+            background-color: #6200ea;
+        }
+        /* Navigation Bar */
+        .navbar {
+            display: flex;
+            justify-content: space-between; /* Space between items */
+            align-items: center;
+            background-color: #fff;
+            position: fixed;
+            width: 100%;
+            max-width: 100vw; /* Prevent overflow */
+            top: 0;
+            z-index: 1000;
+            padding: 10px 20px; /* Added padding for better spacing */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar h1 {
+            font-size: 20px; /* Reduced font size */
+            margin: 0;
+            flex-grow: 1; /* Allow the title to take up available space */
+            text-align: center; /* Center the title */
+        }
+        .navbar .icon {
+            font-size: 20px; /* Reduced font size */
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        .main-content {
+            width: 100%;
+            max-width: 1200px;
+            margin: 70px auto 0; /* Added margin-top to avoid overlap with navbar */
+            padding: 20px;
+            overflow: hidden; /* Prevent overflow */
+        }
+
+        .entries {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Allow more items per row */
+            gap: 15px; /* Reduce gap between items */
+            padding: 10px; /* Add padding to prevent cutting off */
+        }
+
+        .entry {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+            padding: 15px; /* Reduce padding for a more compact look */
+        }
+
+        .entry img.banner {
+            width: 100%; /* Full width of the container */
+            height: auto; /* Maintain aspect ratio */
+            aspect-ratio: 16 / 9; /* Set the desired aspect ratio (16:9 in this case) */
+            object-fit: cover; /* Cover the entire area while maintaining aspect ratio */
+        }
+
+        .entry .content {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .entry .content h2 {
+            font-size: 1.2rem; /* Reduced font size */
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .entry .content .slogan {
+            font-size: 0.9rem; /* Reduced font size */
+            color: #6200ea;
+            margin: 5px 0;
+        }
+
+        .entry .content .short-description {
+            font-size: 0.8rem; /* Reduced font size */
+            color: #555;
+            max-height: 3.6em; /* Show only 2 lines */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.2em;
+        }
+
+        .entry .content .full-description {
+            font-size: 0.8rem; /* Reduced font size */
+            color: #555;
+            display: none; /* Initially hidden */
+            line-height: 1.4em;
+        }
+
+        .entry .content .username {
+            font-size: 0.8rem; /* Reduced font size */
+            color: #6200ea;
+            text-align: left; /* Align to left */
+            margin-bottom: 10px; /* Space below the username */
+        }
+
+        .entry .content .date {
+            font-size: 0.7rem; /* Reduced font size */
+            color: #999;
+            text-align: left; /* Align to left */
+            margin-bottom: 10px; /* Space below the date */
+        }
+
+        .show-toggle {
+            color: #6200ea;
+            cursor: pointer;
+            font-size: 0.8rem; /* Reduced font size */
+        }
+
+        /* Like Button */
+        .like-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem; /* Reduced font size */
+            position: absolute; /* Position it absolutely */
+            bottom: 10px; /* Align to bottom */
+            left: 10px; /* Align to left */
+            display: flex;
+            align-items: center; /* Center align */
+        }
+
+        .like-count {
+            font-size: 0.8rem; /* Reduced font size */
+            color: #555;
+            margin-left: 5px; /* Space between emoji and count */
+        }
+
+        /* Comment Button (now using emoji) */
+        .comment-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px; /* Align to right */
+            background-color: transparent;
+            font-size: 1.2rem; /* Reduced font size */
+            border: none;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .comment-btn:hover {
+            color: #6200ea;
+        }
+
+        /* Popup for Comments */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 300px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .popup h3 {
+            margin-bottom: 10px;
+            font-size: 1.2rem; /* Reduced font size */
+            color: #333;
+        }
+
+        .popup input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .popup .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #6200ea;
+            cursor: pointer;
+        }
+
+        /* Rocket Button */
+        .rocket-btn {
+            position: fixed;
+            bottom: 48px;
+            right: 18px;
+            background-color: white;
+            color: #6200ea;
+            padding: 13px;
+            border-radius: 50%;
+            font-size: 2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+
+        .rocket-btn:hover {
+            background-color: white;
+        }
+
+        /* Form Container */
+        .form-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            width: 300px;
+            display: none;
+            z-index: 20;
+        }
+
+        .form-container input,
+        .form-container textarea,
+        .form-container select,
+        .form-container button {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem; /* Reduced font size */
+        }
+
+        .form-container button {
+            background-color: #6200ea;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .form-container button:hover {
+            background-color: #4b00c7;
+        }
+
+        .comment-box {
+            margin-top: 10px;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            color: #333;
+        }
+
+        .popup-comments {
+            margin-top: 10px;
+            font-size: 0.9rem; /* Reduced font size */
+            color: #555;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #f0f0f0; /* Light background for comments */
+            max-height: 200px; /* Limit height */
+            overflow-y: auto; /* Scroll if too many comments */
+        }
+
+        .comment {
+            padding: 5px;
+            border-bottom: 1px solid #ddd; /* Separate each comment */
+            margin-bottom: 5px; /* Space between comments */
+        }
+
+        .comment:last-child {
+            border-bottom: none; /* Remove border from last comment */
+        }
+
+        /* Bottom Navigation Tabs */
+        .tabs {
+            display: flex;
+            justify-content: space-around; /* Space out the tabs */
+            background-color: white; /* Set background to white */
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .tabs a {
+            color: gray; /* Set text color to black */
+            text-decoration: none;
+            text-align: center;
+            font-size: 14px; /* Reduced font size */
+        }
+
+        .tabs a:hover {
+            color: black;
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            .navbar h1 {
+                font-size: 1.2rem; /* Reduced font size */
+            }
+
+            .entry .content h2 {
+                font-size: 1.1rem; /* Reduced font size */
+            }
+
+            .entry .content .slogan {
+                font-size: 0.9rem; /* Reduced font size */
+            }
+
+            .entry .content .short-description,
+            .entry .content .full-description {
+                font-size: 0.8rem; /* Reduced font size */
+            }
+
+            .like-btn, .comment-btn {
+                font-size: 1.2rem; /* Reduced font size */
+            }
+
+            .like-count {
+                font-size: 0.8rem; /* Reduced font size */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar h1 {
+                font-size: 1rem; /* Reduced font size */
+            }
+
+            .entry .content h2 {
+                font-size: 1rem; /* Reduced font size */
+            }
+
+            .entry .content .slogan {
+                font-size: 0.8rem; /* Reduced font size */
+            }
+
+            .entry .content .short-description,
+            .entry .content .full-description {
+                font-size: 0.7rem; /* Reduced font size */
+            }
+
+            .like-btn, .comment-btn {
+                font-size: 1rem; /* Reduced font size */
+            }
+
+            .like-count {
+                font-size: 0.7rem; /* Reduced font size */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<div class="navbar">
+    <div class="icon" onclick="toggleDropdown()">☰</div>
+       
+    <h1>Insights</h1>
+    <div class="dropdown-menu" id="dropdownMenu">
+        <a href="index.html">🏠 Home</a>
+        <a href="#">📰 Blog</a>
+        <a href="#">💡 Ideas Insights</a>
+        <a href="#">📝 Feedback</a>
+        <a href="dashboard.html">📊 Stats</a>
+    </div>
+
+    <!-- Login Button -->
+    <a href="loginpage.html" class="login-btn">Login</a>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <div class="entries"></div>
+</div>
+
+<!-- Rocket Button -->
+<button class="rocket-btn" onclick="toggleForm()">
+    <i class="fas fa-rocket"></i>
+</button>
+
+<!-- Form Container -->
+<div class="form-container" id="form-container">
+    <button class="close-btn" onclick="toggleForm()">
+        <i class="fas fa-times"></i> <!-- Cross icon -->
+    </button>
+    <h3>Submit Your Idea</h3>
+    <input type="text" id="user-name" placeholder="Your Name" required>
+    <input type="text" id="product-name" placeholder="Product Name" required>
+    <textarea id="description" placeholder="Short Description" required></textarea>
+    <input type="text" id="slogan" placeholder="Slogan">
+    <input type="file" id="banner" accept="image/*" required>
+
+    <!-- Checkbox for Domain and Position -->
+    <div class="checkbox-container">
+        <input type="checkbox" id="domain-checkbox" onclick="toggleDomainPositionPopup()">
+        <label for="domain-checkbox">Select Domain & Position</label>
+    </div>
+
+    <button id="submit-button" onclick="submitIdea()">Submit</button>
+</div>
+
+<!-- Popup for Domain and Position Selection -->
+<div class="popup-overlay" id="popup-overlay" style="display: none;"></div>
+<div class="popup" id="domain-position-popup" style="display: none;">
+    <button class="close-btn" onclick="toggleDomainPositionPopup()">
+        <i class="fas fa-times"></i> <!-- Cross icon -->
+    </button>
+    <h3>Select Domain and Position</h3>
+    <label for="domain">Domain:</label>
+    <select id="domain">
+        <option value="">Select Domain</option>
+        <option value="Marketing">Marketing</option>
+        <option value="Development">Development</option>
+        <option value="Design">Design</option>
+        <option value="Business">Business</option>
+    </select>
+    <div></div>
+    <label for="position">Position:</label>
+    <select id="position">
+        <option value="">Select Position</option>
+        <option value="Manager">Manager</option>
+        <option value="Developer">Developer</option>
+        <option value="Designer">Designer</option>
+        <option value="Intern">Intern</option>
+    </select>
+    <div></div>
+
+    <button onclick="confirmDomainPosition()">Confirm</button>
+</div>
+
+<!-- Popup for Comments -->
+<div class="popup-overlay" id="comment-popup-overlay" style="display: none;"></div>
+
+<!-- Bottom Navigation Tabs -->
+<div class="tabs">
+    <a href="index.html">🏠 Home</a>
+    <a href="blog.html">📰 Blog</a>
+    <a href="#">💡 IdeaInsights</a>
+    <a href="#">🔍 Search</a>
+    <a href="#">🔔 Notifications</a>
+</div>
+
+<script>
+    const allComments = {}; // Store comments by entry ID
+    const likedEntries = new Set(); // Store liked entry IDs
+    const likeCounts = {}; // Store like counts for each entry
+    let selectedDomain = '';
+    let selectedPosition = '';
+
+    // Function to toggle the form container
+    function toggleForm() {
+        const formContainer = document.getElementById('form-container');
+        formContainer.style.display = (formContainer.style.display === 'none' || formContainer.style.display === '') ? 'block' : 'none';
+    }
+
+    // Function to toggle the domain and position selection popup
+    function toggleDomainPositionPopup() {
+        const popup = document.getElementById('domain-position-popup');
+        const overlay = document.getElementById('popup-overlay');
+        if (popup.style.display === 'none' || popup.style.display === '') {
+            popup.style.display = 'block';
+            overlay.style.display = 'block';
+        } else {
+            popup.style.display = 'none';
+            overlay.style.display = 'none';
+        }
+    }
+
+    // Function to confirm domain and position selection
+    function confirmDomainPosition() {
+        selectedDomain = document.getElementById('domain').value;
+        selectedPosition = document.getElementById('position').value;
+        toggleDomainPositionPopup(); // Close the popup
+    }
+
+    // Function to handle form submission
+    function submitIdea() {
+        const userName = document.getElementById('user-name').value; // Get the user's name
+        const productName = document.getElementById('product-name').value;
+        const description = document.getElementById('description').value;
+        const banner = document.getElementById('banner').files[0];
+        const slogan = document.getElementById('slogan').value; // Get the slogan
+        const isDomainSelected = document.getElementById('domain-checkbox').checked;
+
+        if (productName && description && banner && userName) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const bannerUrl = e.target.result;
+                const entriesContainer = document.querySelector('.entries');
+
+                // Create a unique entry ID
+                const entryId = Date.now();
+
+                // Check if the description is long enough to show "Show More"
+                const showMore = description.length > 200; // Adjust the length as needed
+
+                // Initialize like count
+                likeCounts[entryId] = 0;
+
+                // Create the new entry
+                const entry = document.createElement('div');
+                entry.classList.add('entry');
+                entry.dataset.entryId = entryId;
+
+                // Get the current date
+                const currentDate = new Date().toLocaleDateString();
+
+                entry.innerHTML = `
+                    <div class="username">By ${userName}</div>
+                    <div class="date">${currentDate}</div>
+                    <img class="banner" src="${bannerUrl}" alt="Banner Image">
+                    <div class="content">
+                        <h2>${productName}</h2>
+                        <p class="slogan">${slogan}</p>
+                        <div class="short-description">${description.slice(0, 200)}</div>
+                        <div class="full-description">${description}</div>
+                        ${showMore ? '<span class="show-toggle" onclick="toggleDescription(this)">Show More</span>' : ''}
+                        ${isDomainSelected ? `<p>Domain: ${selectedDomain || 'Not selected'}</p>
+                        <p>Position: ${selectedPosition || 'Not selected'}</p>` : ''}
+                    </div>
+                    <div class="like-btn" onclick="toggleLike(${entryId}, this)">
+                        <span>👍</span>
+                        <span class="like-count" id="like-count-${entryId}">0 like</span>
+                    </div>
+                    <button class="comment-btn" onclick="openCommentPopup(${entryId})">
+                        💬
+                    </button>
+                `;
+                entriesContainer.appendChild(entry);
+
+                // Initialize comments for this entry
+                allComments[entryId] = [];
+
+                // Reset the form after submission
+                document.getElementById('user-name').value = ''; // Reset user name
+                document.getElementById('product-name').value = '';
+                document.getElementById('description').value = '';
+                document.getElementById('banner').value = '';
+                document.getElementById('slogan').value = ''; // Reset slogan
+                document.getElementById('domain').value = '';
+                document.getElementById('position').value = '';
+                document.getElementById('domain-checkbox').checked = false; // Reset checkbox
+                selectedDomain = ''; // Reset selected domain
+                selectedPosition = ''; // Reset selected position
+                toggleForm(); // Close the form after submission
+            };
+            reader.readAsDataURL(banner); // Convert the banner image to base64
+        } else {
+            alert("Please fill in all fields!");
+        }
+    }
+
+    // Function to toggle the description visibility
+    function toggleDescription(element) {
+        const fullDescription = element.parentElement.querySelector('.full-description');
+        const shortDescription = element.parentElement.querySelector('.short-description');
+
+        if (fullDescription.style.display === 'none' || fullDescription.style.display === '') {
+            fullDescription.style.display = 'block';
+            shortDescription.style.display = 'none';
+            element.textContent = 'Show Less'; // Change button text
+        } else {
+            fullDescription.style.display = 'none';
+            shortDescription.style.display = 'block';
+            element.textContent = 'Show More'; // Change button text
+        }
+    }
+
+    // Function to toggle like status
+    function toggleLike(entryId, button) {
+        if (likedEntries.has(entryId)) {
+            likedEntries.delete(entryId); // Remove like
+            likeCounts[entryId]--; // Decrease like count
+        } else {
+            likedEntries.add(entryId); // Add like
+            likeCounts[entryId]++; // Increase like count
+        }
+        // Update the like count display
+        const countText = likeCounts[entryId] === 1 ? "1 like" : `${likeCounts[entryId]} likes`;
+        document.getElementById(`like-count-${entryId}`).textContent = countText;
+    }
+
+    // Function to open the comment popup
+    function openCommentPopup(entryId) {
+        const popup = document.createElement('div');
+        popup.classList.add('popup');
+        popup.id = `popup-${entryId}`;
+        popup.innerHTML = `
+            <button class="close-btn" onclick="closeCommentPopup(${entryId})">X</button>
+            <h3>Write Your Comment</h3>
+            <input type="text" placeholder="Type your comment" id="comment-input-${entryId}">
+            <button onclick="submitComment(${entryId})">Submit Comment</button>
+            <div class="popup-comments" id="popup-comments-${entryId}">
+                <h4>Comments:</h4>
+                <div class="comments-container" id="comments-container-${entryId}">
+                    ${allComments[entryId].map(comment => `
+                        <div class="comment">
+                            ${comment.text}
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+        document.body.appendChild(popup);
+
+        // Show the popup overlay
+        const overlay = document.getElementById('comment-popup-overlay');
+        overlay.style.display = 'block';
+        popup.style.display = 'block';
+    }
+
+    // Function to close the comment popup
+    function closeCommentPopup(entryId) {
+        const popup = document.getElementById(`popup-${entryId}`);
+        if (popup) {
+            popup.remove();
+        }
+        const overlay = document.getElementById('comment-popup-overlay');
+        overlay.style.display = 'none';
+    }
+
+    // Function to submit the comment and show it in the popup comment box
+    function submitComment(entryId) {
+        const commentInput = document.getElementById(`comment-input-${entryId}`);
+        const commentText = commentInput.value.trim();
+
+        if (commentText) {
+            // Create a unique ID for the comment
+            const commentId = Date.now();
+
+            // Store the comment for this entry
+            allComments[entryId].push({ id: commentId, text: commentText, replies: [] });
+
+            // Update the popup comment box
+            const commentsContainer = document.getElementById(`comments-container-${entryId}`);
+            const newComment = document.createElement('div');
+            newComment.textContent = commentText;
+            newComment.className = 'comment'; // Style it as needed
+            commentsContainer.appendChild(newComment);
+
+            // Clear the input field
+            commentInput.value = '';
+        } else {
+            alert("Please enter a comment!");
+        }
+    }
+
+    // Function to toggle dropdown menu visibility
+    function toggleDropdown() {
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        dropdownMenu.style.display = (dropdownMenu.style.display === 'none' || dropdownMenu.style.display === '') ? 'block' : 'none';
+    }
+</script>
+
+</body>
+</html>
